@@ -6,7 +6,8 @@ export default function App() {
   return (
     <WebView
       style={styles.container}
-      source={{ uri: 'https://expo.dev' }}
+      allowsInlineMediaPlayback={true}
+      source={{ uri: 'https://demo.dynamsoft.com/barcode-reader-js/' }}
     />
   );
 }
