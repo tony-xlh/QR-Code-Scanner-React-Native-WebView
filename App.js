@@ -1,10 +1,16 @@
 import { WebView } from 'react-native-webview';
 import { Alert, StyleSheet } from 'react-native';
 
+
 export default function App() {
+
   return (
     <WebView
       style={styles.container}
+      originWhitelist={['*']}
+      javaScriptEnabled={true}
+      androidHardwareAccelerationDisabled={true}
+      mediaCapturePermissionGrantType={true}
       allowsInlineMediaPlayback={true}
       mediaPlaybackRequiresUserAction={false}
       onMessage={(event) => {
