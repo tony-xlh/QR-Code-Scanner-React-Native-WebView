@@ -2,6 +2,7 @@ import { WebView } from 'react-native-webview';
 import { Alert, StyleSheet, View, Text } from 'react-native';
 import { useState, useEffect } from 'react';
 import { Camera } from 'expo-camera';
+import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,26 +21,25 @@ export default function App() {
   }
   if (hasPermission) {
     return (
-      <WebView
-        style={styles.container}
-        originWhitelist={['*']}
-        javaScriptEnabled={true}
-        androidHardwareAccelerationDisabled={true}
-        mediaCapturePermissionGrantType={true}
-        allowsInlineMediaPlayback={true}
-        mediaPlaybackRequiresUserAction={false}
-        onMessage={(event) => {
-          const results = JSON.parse(event.nativeEvent.data)
-          let title = "Found " + results.length + ((results.length>1)?" results":" result")
-          let message = "";
-          for (let index = 0; index < results.length; index++) {
-            const result = results[index];
-            message = message + result.barcodeFormatString + ": " + result.barcodeText + "\n";
-          }
-          Alert.alert(title,message);
-        }}
-        source={{ uri: 'https://tony-xlh.github.io/Vanilla-JS-Barcode-Reader-Demos/React-Native-Webview/' }}
-      />
+      <>
+        <WebView
+          style={styles.container}
+          allowsInlineMediaPlayback={true}
+          mediaPlaybackRequiresUserAction={false}
+          onMessage={(event) => {
+            const results = JSON.parse(event.nativeEvent.data)
+            let title = "Found " + results.length + ((results.length>1)?" results":" result")
+            let message = "";
+            for (let index = 0; index < results.length; index++) {
+              const result = results[index];
+              message = message + result.barcodeFormatString + ": " + result.barcodeText + "\n";
+            }
+            Alert.alert(title,message);
+          }}
+          source={{ uri: 'https://tony-xlh.github.io/Vanilla-JS-Barcode-Reader-Demos/React-Native-Webview/' }}
+        />
+        <StatusBar style="light" translucent={false} />
+      </>
     );
   }
 }
