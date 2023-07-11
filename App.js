@@ -2,6 +2,7 @@ import { Alert, Button, Text, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import QRCodeScanner from './QRCodeScanner';
 import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   const [scanning,setScanning] = useState(false);
@@ -24,15 +25,15 @@ export default function App() {
         ></QRCodeScanner>
       }
       {!scanning &&
-        <View style={{alignItems:"center"}}>
+        <SafeAreaView style={styles.container}>
            <Text style={styles.title}>
               Dynamsoft Barcode Reader Demo
             </Text>
           <Button title='Start QR Code Scanner' onPress={() => setScanning(true)}></Button>
-        </View>
+        </SafeAreaView>
       }
-      <StatusBar style="light" translucent={false} />
-    </>
+      <StatusBar style="auto"/>
+      </>
   );
 
 }
