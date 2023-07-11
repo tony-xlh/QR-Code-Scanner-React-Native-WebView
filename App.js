@@ -1,8 +1,8 @@
 import { Alert, Button, Text, View, StyleSheet, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import QRCodeScanner from './QRCodeScanner';
 import { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import QRCodeScanner from './QRCodeScanner';
+import { SafeAreaView, SafeAreaProvider  } from 'react-native-safe-area-context';
 
 export default function App() {
   const [scanning,setScanning] = useState(false);
@@ -17,23 +17,26 @@ export default function App() {
     Alert.alert(title,message);
     setScanning(false);
   }
+
   return (
-    <SafeAreaView style={styles.container}>
-      {scanning &&
-        <QRCodeScanner
-          onScanned={(results)=>showResults(results)}
-        ></QRCodeScanner>
-      }
-      {!scanning &&
-        <View style={{alignItems:'center'}}>
-          <Text style={styles.title}>
-              Dynamsoft Barcode Reader Demo
-            </Text>
-          <Button title='Start QR Code Scanner' onPress={() => setScanning(true)}></Button>
-        </View>
-      }
-      <StatusBar style="auto"/>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        {scanning &&
+          <QRCodeScanner
+            onScanned={(results)=>showResults(results)}
+          ></QRCodeScanner>
+        }
+        {!scanning &&
+          <View style={{alignItems:'center'}}>
+            <Text style={styles.title}>
+                Dynamsoft Barcode Reader Demo
+              </Text>
+            <Button title='Start QR Code Scanner' onPress={() => setScanning(true)}></Button>
+          </View>
+        }
+        <StatusBar style="auto"/>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -43,7 +46,6 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    marginTop: Platform.OS === "ios" ? 20 : 0,
     marginVertical: 8,
   },
 });
