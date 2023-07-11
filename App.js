@@ -25,7 +25,7 @@ export default function App() {
         ></QRCodeScanner>
       }
       {!scanning &&
-        <View>
+        <View style={{alignItems:'center'}}>
           <Text style={styles.title}>
               Dynamsoft Barcode Reader Demo
             </Text>
