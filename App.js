@@ -6,6 +6,7 @@ export default function App() {
     <WebView
       style={styles.container}
       allowsInlineMediaPlayback={true}
+      mediaPlaybackRequiresUserAction={false}
       onMessage={(event) => {
         const results = JSON.parse(event.nativeEvent.data)
         let title = "Found " + results.length + ((results.length>1)?" results":" result")
