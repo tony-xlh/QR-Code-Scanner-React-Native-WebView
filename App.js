@@ -1,47 +1,40 @@
-import { WebView } from 'react-native-webview';
-import { Alert, StyleSheet, View, Text } from 'react-native';
-import { useState, useEffect } from 'react';
-import { Camera } from 'expo-camera';
+import { Alert, Button, Text, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import QRCodeScanner from './QRCodeScanner';
+import { useState } from 'react';
 
 export default function App() {
-  const [hasPermission, setHasPermission] = useState(null);
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+  const [scanning,setScanning] = useState(false);
+  
+  const showResults = (results) => {
+    let title = "Found " + results.length + ((results.length>1)?" results":" result")
+    let message = "";
+    for (let index = 0; index < results.length; index++) {
+      const result = results[index];
+      message = message + result.barcodeFormatString + ": " + result.barcodeText + "\n";
+    }
+    Alert.alert(title,message);
+    setScanning(false);
+  }
+  return (
+    <>
+      {scanning &&
+        <QRCodeScanner
+          onScanned={(results)=>showResults(results)}
+        ></QRCodeScanner>
+      }
+      {!scanning &&
+        <View style={{alignItems:"center"}}>
+           <Text style={styles.title}>
+              Dynamsoft Barcode Reader Demo
+            </Text>
+          <Button title='Start QR Code Scanner' onPress={() => setScanning(true)}></Button>
+        </View>
+      }
+      <StatusBar style="light" translucent={false} />
+    </>
+  );
 
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-  if (hasPermission) {
-    return (
-      <>
-        <WebView
-          style={styles.container}
-          allowsInlineMediaPlayback={true}
-          mediaPlaybackRequiresUserAction={false}
-          onMessage={(event) => {
-            const results = JSON.parse(event.nativeEvent.data)
-            let title = "Found " + results.length + ((results.length>1)?" results":" result")
-            let message = "";
-            for (let index = 0; index < results.length; index++) {
-              const result = results[index];
-              message = message + result.barcodeFormatString + ": " + result.barcodeText + "\n";
-            }
-            Alert.alert(title,message);
-          }}
-          source={{ uri: 'https://tony-xlh.github.io/Vanilla-JS-Barcode-Reader-Demos/React-Native-Webview/' }}
-        />
-        <StatusBar style="light" translucent={false} />
-      </>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -50,5 +43,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    marginVertical: 8,
   },
 });
