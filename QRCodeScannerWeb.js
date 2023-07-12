@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadLibrary } from "./Utils";
 
 export default function QRCodeScanner(props) {
@@ -7,11 +7,14 @@ export default function QRCodeScanner(props) {
   const container = useRef(null);
   const interval = useRef(null);
   const processing = useRef(false);
+  const [status,setStatus] = useState("");
   useEffect(() => {
-    const loadLibraries = async () => {
+    const loadLibrariesAndInit = async () => {
+      setStatus("Initializing...");
       await loadLibrary("https://cdn.jsdelivr.net/npm/dynamsoft-camera-enhancer@3.3.4/dist/dce.js","text/javascript");
       await loadLibrary("https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.6.20/dist/dbr.js","text/javascript");
-      init();
+      await init();
+      setStatus("");
     }
     const init = async () => {
       Dynamsoft.DBR.BarcodeScanner.license = 'DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=='; // one-day trial
@@ -31,7 +34,7 @@ export default function QRCodeScanner(props) {
       container.current.appendChild(enhancer.current.getUIElement());
       startScan();
     }
-    loadLibraries();
+    loadLibrariesAndInit();
   },[]);
 
   const startProcessingLoop = () => {
@@ -85,6 +88,9 @@ export default function QRCodeScanner(props) {
   }
 
   return (
-    <div ref={container} className="scanner" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%"}}></div>
+    <div>
+      <div>{status}</div>
+      <div ref={container} className="scanner" style={{position:"absolute",top:0,left:0,width:"100%",height:"100%"}}></div>
+    </div>
   );
 }

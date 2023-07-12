@@ -12,7 +12,6 @@ const loadComponent = async () => {
     const module = await import("./QRCodeScanner");
     QRCodeScanner = module.default;
   }
-  
 }
 loadComponent();
 
