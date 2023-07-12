@@ -30,9 +30,15 @@ export default function QRCodeScanner(props) {
         allowsInlineMediaPlayback={true}
         mediaPlaybackRequiresUserAction={false}
         onMessage={(event) => {
-          const results = JSON.parse(event.nativeEvent.data)
-          if (props.onScanned) {
-            props.onScanned(results);
+          if (!event.nativeEvent.data) {
+            if (props.onClosed) {
+              props.onClosed();
+            }
+          }else{
+            if (props.onScanned) {
+              const results = JSON.parse(event.nativeEvent.data)
+              props.onScanned(results);
+            }
           }
         }}
         source={{ uri: 'https://tony-xlh.github.io/Vanilla-JS-Barcode-Reader-Demos/React-Native-Webview/?startScan=true&license='+encodedLicense() }}
