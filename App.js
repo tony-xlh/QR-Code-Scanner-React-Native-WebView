@@ -26,7 +26,11 @@ export default function App() {
       const result = results[index];
       message = message + result.barcodeFormatString + ": " + result.barcodeText + "\n";
     }
-    Alert.alert(title,message);
+    if (Platform.OS === "web"){
+      alert(message);
+    }else{
+      Alert.alert(title,message);
+    }
     setScanning(false);
   }
 
