@@ -1,12 +1,24 @@
 import { Alert, Button, Text, View, StyleSheet, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import QRCodeScanner from './QRCodeScanner';
+import { useState,useEffect,useRef } from 'react';
 import { SafeAreaView, SafeAreaProvider  } from 'react-native-safe-area-context';
+
+let QRCodeScanner;
+const loadComponent = async () => {
+  if (Platform.OS === "web") {
+    const module = await import("./QRCodeScannerWeb");
+    QRCodeScanner = module.default;
+  }else{
+    const module = await import("./QRCodeScanner");
+    QRCodeScanner = module.default;
+  }
+  
+}
+loadComponent();
 
 export default function App() {
   const [scanning,setScanning] = useState(false);
-  
+
   const showResults = (results) => {
     let title = "Found " + results.length + ((results.length>1)?" results":" result")
     let message = "";
