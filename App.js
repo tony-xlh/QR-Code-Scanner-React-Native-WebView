@@ -36,6 +36,7 @@ export default function App() {
         {scanning &&
           <QRCodeScanner
             onScanned={(results)=>showResults(results)}
+            onClosed={()=>setScanning(false)}
           ></QRCodeScanner>
         }
         {!scanning &&
